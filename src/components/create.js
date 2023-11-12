@@ -7,6 +7,9 @@ function Create() {
     const [cover, setCover] = useState('');
     const [author, setAuthor] = useState('');
 
+    // e.preventDefault();: This line prevents the default behavior of the event. In the context of a form submission, this prevents the default form submission behavior
+    // when a form is submitted, the browser typically reloads the page or performs a full-page refresh
+    // by calling e.preventDefault(), you're stopping this default behavior, allowing you to handle the form submission manually using custom logic
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -25,7 +28,7 @@ function Create() {
             .then()
             .catch();
     }
-    
+
     return (
         <div>
             <h2>Hello from create Component!</h2>
