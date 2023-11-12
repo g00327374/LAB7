@@ -11,6 +11,9 @@ const cors = require('cors');
 // forms or when receiving data from API requests
 const bodyParser = require('body-parser');
 
+// This code snippet is configuring CORS (Cross-Origin Resource Sharing) for an Express.js application
+// CORS is a security feature implemented by web browsers to restrict web pages from making requests to a different domain than the one that served the web page
+// It is enforced by the browser, and without proper configuration, requests from a different origin may be blocked
 app.use(cors());
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -101,7 +104,7 @@ app.get('/api/books', (req, res) => {
             "categories": []
         }
     ];
-
+    // res: This is the response object, representing the HTTP response that the server sends back to the client
     res.status(200).json({
         myBooks: data
     })
