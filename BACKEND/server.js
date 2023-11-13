@@ -12,7 +12,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 // this code snippet is configuring CORS (Cross-Origin Resource Sharing) for an Express.js application
-// cORS is a security feature implemented by web browsers to restrict web pages from making requests to a different domain than the one that served the web page
+// CORS is a security feature implemented by web browsers to restrict web pages from making requests to a different domain than the one that served the web page
 // tt is enforced by the browser, and without proper configuration, requests from a different origin may be blocked
 app.use(cors());
 app.use(function (req, res, next) {
@@ -28,17 +28,56 @@ app.use(function (req, res, next) {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// getting-started.js
+// connect to the mongo db
+const mongoose = require('mongoose');
+
+main().catch(err => console.log(err));
+
+
+async function main() {
+    // replace url with the link from mongodb.com database
+    await mongoose.connect('mongodb+srv://admin:admin@g00327374.onfefpl.mongodb.net/?retryWrites=true&w=majority');
+
+    // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+}
+
+// create my schema called bookSchema
+const bookSchema = new mongoose.Schema({
+    title: String,
+    cover: String,
+    author: String
+})
+
+const bookModel = mongoose.model('books', bookSchema);
+
 // post method to parase the body of this post request
 // listening at port 4000 and sends back a book message
 app.post('/api/book', (req, res) => {
     console.log(req.body);
-    res.send("Book Created")
+
+    // create a document for bookModel
+    bookModel.create({
+        title: req.body.title,
+        cover: req.body.cover,
+        author: req.body.author
+    })
+        .then(
+            () => {
+                res.send("Data Received!")
+            }
+        )
+        .catch(
+            () => {
+                res.send("Data NOT received!")
+            }
+        )
 })
 
 // uses 'app' object which represents an instance of an
 // application to define a route for handling HTTP GET requests
 app.get('/name', (req, res) => {
-    // req.query.fname is used to acces the value of a query
+    // req.query.fname is used to access the value of a query
     // parameter named fname from incoming HTTP request
     // query parameters are part of the URL and are used to 
     // pass data to the server from the client
@@ -68,47 +107,21 @@ app.get('/hello/:name', (req, res) => {
     res.send("Hello " + req.params.name);
 })
 
-app.get('/api/books', (req, res) => {
-    const data = [
-        {
-            "title": "Learn Git in a Month of Lunches",
-            "isbn": "1617292419",
-            "pageCount": 0,
-            "thumbnailUrl": "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/umali.jpg",
-            "status": "MEAP",
-            "authors": ["Rick Umali"],
-            "categories": []
-        },
-        {
-            "title": "MongoDB in Action, Second Edition",
-            "isbn": "1617291609",
-            "pageCount": 0,
-            "thumbnailUrl": "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/banker2.jpg",
-            "status": "MEAP",
-            "authors": [
-                "Kyle Banker",
-                "Peter Bakkum",
-                "Tim Hawkins",
-                "Shaun Verch",
-                "Douglas Garrett"
-            ],
-            "categories": []
-        },
-        {
-            "title": "Getting MEAN with Mongo, Express, Angular, and Node",
-            "isbn": "1617292036",
-            "pageCount": 0,
-            "thumbnailUrl": "https://s3.amazonaws.com/AKIAJC5RLADLUMVRPFDQ.book-thumb-images/sholmes.jpg",
-            "status": "MEAP",
-            "authors": ["Simon Holmes"],
-            "categories": []
-        }
-    ];
-    // res: This is the response object, representing the HTTP response that the server sends back to the client
-    res.status(200).json({
-        myBooks: data
-    })
+// connect to mongodb
+app.get('/api/books', async (req, res) => {
+    let books = await bookModel.find({});
+    console.log(books);
+    res.json(books);
+
 })
+
+app.get('/api/book/:id', async (req, res) => {
+    console.log(req.params.id);
+    let book = await bookModel.findById({ _id: req.params.id })
+    res.send(book);
+})
+
+
 
 app.get('/test', (req, res) => {
     res.sendFile(path.join(__dirname + '/index.html'));
