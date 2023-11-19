@@ -49,6 +49,10 @@ const bookSchema = new mongoose.Schema({
     author: String
 })
 
+// create a Mongoose model for a MongoDB collection named "books" using a specified schema called bookSchema
+// mongoose.model('books', bookSchema) creates a Mongoose model named bookModel for the "books" collection based on the provided schema (bookSchema). 
+// this model can be used to interact with the MongoDB collection "books" using the defined schema.
+// it allows you to perform CRUD (Create, Read, Update, Delete) operations on the documents in the "books" collection through the Mongoose API
 const bookModel = mongoose.model('books', bookSchema);
 
 // post method to parase the body of this post request
