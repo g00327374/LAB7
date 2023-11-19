@@ -34,7 +34,8 @@ const mongoose = require('mongoose');
 
 main().catch(err => console.log(err));
 
-
+// the async funtion is used to define an asynchronous function 
+// this means that the function will always return a Promise
 async function main() {
     // replace url with the link from mongodb.com database
     await mongoose.connect('mongodb+srv://admin:admin@g00327374.onfefpl.mongodb.net/?retryWrites=true&w=majority');
